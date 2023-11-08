@@ -42,6 +42,48 @@ services:
       networks:
           - customers-api
 
+
+
+  redis:
+      image: redis:7-alpine
+      networks:
+          - customers-api
+
+  celery_worker:
+      build:
+        context: .
+        dockerfile: ./docker/local/django/Dockerfile
+      command: /start-celeryworker
+      volumes:
+          - .:/app
+      env_file:
+          - ./.envs/.local/.django
+          - ./.envs/.local/.postgres
+      depends_on:
+          - redis
+          - postgres
+          - mailhog
+      networks:
+          - customers-api
+
+  flower:
+      build:
+        context: .
+        dockerfile: ./docker/local/django/Dockerfile
+      command: /start-flower
+      volumes:
+          - flower_data:/data
+      env_file:
+          - ./.envs/.local/.django
+          - ./.envs/.local/.postgres
+      ports:
+          - "5555:5555"
+      depends_on:
+          - redis
+          - postgres
+      networks:
+          - customers-api        
+
 networks:
     customers-api:
         driver: bridge
