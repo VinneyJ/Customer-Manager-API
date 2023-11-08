@@ -1,0 +1,6 @@
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=customer-db
+POSTGRES_USER=vince
+POSTGRES_PASSWORD=Pass012345
+DATABASE_URL=postgres://vince:Pass012345@postgres:5432/customer-db
