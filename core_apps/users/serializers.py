@@ -1,6 +1,7 @@
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import LoginSerializer
 from django.contrib.auth import get_user_model
 from django_countries.serializer_fields import CountryField
 from phonenumber_field.serializerfields import PhoneNumberField
@@ -59,3 +60,13 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.last_name = self.cleaned_data.get("last_name")
 
         return user
+
+
+class CustomLoginSerializer(LoginSerializer):
+    # Remove the 'username' field from the serializer
+    username = None
+
+    def validate(self, attrs):
+        # Ensure that 'email' is the only field used for authentication
+        self.username_field = 'email'
+        return super().validate(attrs)
