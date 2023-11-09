@@ -19,6 +19,12 @@ makemigrations:
 migrate:
 	docker compose -f local.yml run --rm api python manage.py migrate
 
+shell:
+	docker compose -f local.yml run --rm api python3 manage.py shell
+
+flush:
+	docker compose -f local.yml run --rm api python3 manage.py flush
+
 collectstatic:
 	docker compose -f local.yml run --rm api python manage.py collectstatic --no-input --clear
 
@@ -31,8 +37,8 @@ down-v:
 volume:
 	docker volume inspect src_local_postgres_data
 
-authors-db:
-	docker compose -f local.yml exec postgres psql --username=alphaogilo --dbname=authors-live
+customers-db:
+	docker compose -f local.yml exec postgres psql --username=vince --dbname=customer-db-1
 
 flake8:
 	docker compose -f local.yml exec api flake8 .
