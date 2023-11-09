@@ -9,6 +9,7 @@ from .managers import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    username = None
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     first_name = models.CharField(verbose_name=_("first name"), max_length=50)
@@ -28,16 +29,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     class Meta:
-        verbose_name = _("user")
-        verbose_name_plural = _("users")
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
 
     def __str__(self):
-        return self.first_name
+        return f"{self.first_name}"
 
     @property
     def get_full_name(self):
         return f"{self.first_name.title()} {self.last_name.title()}"
 
-    @property
-    def get_short_name(self):
-        return self.first_name
+

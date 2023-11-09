@@ -46,10 +46,14 @@ class Customer(TimeStampedModel):
     )
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name="business")
     
-
-
+    
+    objects = models.Manager()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    @property
+    def get_full_name(self):
+        return f"{self.first_name.title()} {self.last_name.title()}"
     
     

@@ -7,6 +7,8 @@ django-autoslug==1.9.8
 django-countries==7.5.1
 django-phonenumber-field==7.0.2
 phonenumbers==8.13.7
+django-taggit==3.1.0
+argon2-cffi==21.3.0
 redis==4.5.1
 celery==5.2.7
 flower==1.2.0

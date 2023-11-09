@@ -3,45 +3,44 @@ version: "3.9"
 services:
   api:
     build:
-        context: .
-        dockerfile: ./docker/local/django/Dockerfile
+      context: .
+      dockerfile: ./docker/local/django/Dockerfile
     command: /start
     volumes:
-        - .:/app:z
-        - static_volume:/app/staticfiles
-        - media_volume:/app/mediafiles
+      - .:/app:z
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
     expose:
-        - "8000"
+      - "8000"
     env_file:
-        - ./.envs/.local/.django
-        - ./.envs/.local/.postgres
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
     depends_on:
-        - postgres
-        - mailhog
-
+      - postgres
+      - mailhog
+      - redis
     networks:
-        - customers-api
+      - customers-api
 
   postgres:
-      build:
-          context: .
-          dockerfile: ./docker/local/postgres/Dockerfile
-      volumes:
-          - local_postgres_data:/var/lib/postgresql/data
-          - local_postgres_data_backups:/backups
-      env_file:
-          - ./.envs/.local/.postgres
-      networks:
-          - customers-api
+    build:
+      context: .
+      dockerfile: ./docker/local/postgres/Dockerfile
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
+    networks:
+      - customers-api
 
   mailhog:
-      image: mailhog/mailhog:v1.0.0
-      container_name: mailhog
-      ports:
-          - "8025:8025"
-      networks:
-          - customers-api
-
+    image: mailhog/mailhog:v1.0.0
+    container_name: mailhog
+    ports:
+      - "8025:8025"
+    networks:
+      - customers-api
 
 
   redis:
@@ -82,11 +81,27 @@ services:
           - redis
           - postgres
       networks:
-          - customers-api        
+          - customers-api
+
+  nginx:
+      restart: always
+      depends_on:
+          - api
+      volumes:
+          - static_volume:/app/staticfiles
+          - media_volume:/app/mediafiles
+      build:
+          context: ./docker/local/nginx
+          dockerfile: Dockerfile
+      ports:
+          - "8080:80"
+      networks:
+          - customers-api
+
 
 networks:
-    customers-api:
-        driver: bridge
+  customers-api:
+      driver: bridge
 
 volumes:
     static_volume:
