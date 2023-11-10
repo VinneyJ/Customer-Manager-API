@@ -14,6 +14,10 @@ A comprehensive API for managing customer information. This API provides CRUD fu
 - **Nginx:** High-performance web server for routing and serving API requests.
 - **Redoc:** Interactive API documentation to facilitate API exploration.
 
+## Database Schema
+
+![DB Schema](./db_diagram/Jambo_Pay.png)
+
 ## Getting Started
 
 ### Prerequisites
