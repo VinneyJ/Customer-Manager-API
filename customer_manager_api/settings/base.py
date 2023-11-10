@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+   
     # "taggit",
 ]
 
@@ -208,14 +209,14 @@ SIMPLE_JWT = {
 REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_COOKIE": "manager-access-token",
-    "JWT_AUTH_REFRESH_COOKIE": "managers-refresh-token",
+    "JWT_AUTH_REFRESH_COOKIE": "manager-refresh-token",
     "REGISTER_SERIALIZER": "core_apps.users.serializers.CustomRegisterSerializer",
     "LOGIN_SERIALIZER": "core_apps.users.serializers.CustomLoginSerializer",
 }
 
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",
     
 ]
 

@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
 from core_apps.business.models import Business, Location
+from core_apps.business.serializers import BusinessSerializer
 
 
 from .models import Customer
@@ -23,56 +24,41 @@ logger = logging.getLogger(__name__)
 class CustomerListCreateView(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    # permission_classes = [permissions.IsAuthenticated]
-    pagination_class = CustomerPagination  # You may have a custom pagination class
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = CustomerPagination  
     ordering_fields = ["created_at", "updated_at"]
-    renderer_classes = [CustomersJSONRenderer]  # Your custom renderer
+    renderer_classes = [CustomersJSONRenderer]  
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
-
-
+        business_data = self.request.data.get("business", {})
+        business_serializer = BusinessSerializer(data=business_data)
+        
+        if business_serializer.is_valid():
+            business_instance = business_serializer.save()
+            serializer.save(created_by=self.request.user, business=business_instance)
+        else:
+            raise ValidationError(detail=business_serializer.errors)
 
 class CustomerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     lookup_field = "id"
     renderer_classes = [CustomerJSONRenderer]
 
-    def perform_update(self, serializer):
-        instance = serializer.save(updated_by=self.request.user)
-        
-        
-        try:
-            # Check if the request contains data for the related Business
-            business_data = self.request.data.get("business")
-            if business_data:
-                business, created = Business.objects.get_or_create(id=business_data.get("id"))
-                business.business_name = business_data.get("business_name")
-                business.category = business_data.get("category")
-                business.registration_date = business_data.get("registration_date")
-                business.save()
-                
-                # Check if the request contains data for the related Location
-                location_data = business_data.get("location")
-                if location_data:
-                    location, created = Location.objects.get_or_create(id=location_data.get("id"))
-                    location.country = location_data.get("country")
-                    location.sub_county = location_data.get("sub_county")
-                    location.ward = location_data.get("ward")
-                    location.building_name = location_data.get("building_name")
-                    location.floor = location_data.get("floor")
-                    location.save()
-        except Exception as e:
-            raise ValidationError(detail={'error': 'Failed to update related Business and Location'}) from e
-        
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-        except Http404:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def destroy(self, request, *args, **kwargs):
+      
+        instance = self.get_object()
 
-        serializer = self.get_serializer(instance)
+       
+        business = instance.business
+        business.delete()
 
-        return Response(serializer.data)
+        
+        location = business.location
+        location.delete()
+
+        
+        instance.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
