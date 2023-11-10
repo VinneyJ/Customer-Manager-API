@@ -17,10 +17,10 @@ class LocationSerializer(serializers.ModelSerializer):
         instance.building_name = validated_data.get('building_name', instance.building_name)
         instance.floor = validated_data.get('floor', instance.floor)
 
-        # Exclude fields from validated_data
+        # Excluding fields from validated_data
         for field in ['created_by', 'updated_by', 'updated_at', 'created_at', 'id', 'pkid']:
             validated_data.pop(field, None)
-        # Update the Location instance
+        # Updating the Location instance
         instance.save()
 
         return instance
@@ -54,11 +54,11 @@ class BusinessSerializer(serializers.ModelSerializer):
         instance.category = validated_data.get('category', instance.category)
         instance.registration_date = validated_data.get('registration_date', instance.registration_date)
 
-        # Exclude fields from validated_data
+        # Excluding fields from validated_data
         for field in ['created_by', 'updated_by', 'updated_at', 'created_at', 'id', 'pkid']:
             validated_data.pop(field, None)
 
-        # Update the Business instance
+        # Updating the Business instance
         instance.save()
 
         return instance

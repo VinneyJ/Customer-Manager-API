@@ -48,10 +48,10 @@ class CustomerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         business_data = validated_data.pop('business', {})
 
-        # Check if a Business object with the same data already exists
+        # Checking if a Business object with the same data already exists
         business, created = Business.objects.get_or_create(**business_data)
 
-        # Use the BusinessSerializer's create or update method
+        # Using the BusinessSerializer's create or update method
         business_serializer = BusinessSerializer(instance=business, data=business_data)
         if business_serializer.is_valid():
             business_instance = business_serializer.save()

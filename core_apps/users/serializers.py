@@ -63,10 +63,14 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 
 class CustomLoginSerializer(LoginSerializer):
-    # Remove the 'username' field from the serializer
+    """
+        Remove the 'username' field from the serializer
+    """
     username = None
 
     def validate(self, attrs):
-        # Ensure that 'email' is the only field used for authentication
+        """
+          Ensuring that 'email' is the only field used for authentication
+        """
         self.username_field = 'email'
         return super().validate(attrs)
