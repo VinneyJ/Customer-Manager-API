@@ -12,11 +12,11 @@ SECRET_KEY = env(
     default="628PHlxAAp8Z0eKCG6-W_nWVTJBub_HEF8-2UzrsY8aI1L10ihI",
 )
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "https://8080-vinneyj-customermanager-77d3wqof9um.ws-eu106.gitpod.io"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "https://8080-vinneyj-customermanager-77d3wqof9um.ws-eu106.gitpod.io", "https://cuddly-eureka-g5vqwqjq9jqfp444-8080.app.github.dev"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["8080-vinneyj-customermanager-77d3wqof9um.ws-eu106.gitpod.io"]
+ALLOWED_HOSTS = ["localhost", "8080-vinneyj-customermanager-77d3wqof9um.ws-eu106.gitpod.io", "cuddly-eureka-g5vqwqjq9jqfp444-8080.app.github.dev"]
 
 DEBUG = True
 

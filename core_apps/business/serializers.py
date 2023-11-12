@@ -11,7 +11,7 @@ class LocationSerializer(serializers.ModelSerializer):
         Update the existing Location instance.
         """
         instance.country = validated_data.get('country', instance.country)
-        instance.city = validated_data.get('city', instance.city)
+        instance.county = validated_data.get('county', instance.county)
         instance.sub_county = validated_data.get('sub_county', instance.sub_county)
         instance.ward = validated_data.get('ward', instance.ward)
         instance.building_name = validated_data.get('building_name', instance.building_name)
